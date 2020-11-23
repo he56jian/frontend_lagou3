@@ -1,5 +1,5 @@
 <template>
-<div>
+<v-app>
       <v-container fluid fill-height>
         <v-layout align-center justify-center>
           <v-flex xs12 sm8 md4>
@@ -26,8 +26,8 @@
               </v-toolbar>
               <v-card-text>
                 <v-form>
-                  <v-text-field prepend-icon="mdi-account" name="login" label="Login" type="text"></v-text-field>
-                  <v-text-field id="password" prepend-icon="mdi-lock" name="password" label="Password" type="password"></v-text-field>
+                  <v-text-field prepend-icon="mdi-account" name="login" label="Login" type="text" v-model="name"></v-text-field>
+                  <v-text-field id="password" prepend-icon="mdi-lock" name="password" label="Password" type="password" v-model="password"></v-text-field>
                 </v-form>
               </v-card-text>
               <v-card-actions>
@@ -38,20 +38,42 @@
           </v-flex>
         </v-layout>
       </v-container>
-</div>
+</v-app>
 </template>
 
 <script>
+import http from '../http'
   export default {
     data: () => ({
-      drawer: null
+      drawer: null,
+      name:'name',
+      password:'password',
+      snackbar:false,
+      text:'账号密码错误'
     }),
     props: {
       source: String
     },
     methods:{
         to_dashboard:function(){
+          this.$router.push('dashboard')
+          http.post('/login',{
+            username:this.name,
+            password:this.password
+          }).then(res=>{
+            if(res.data.msg==='login fail'){
+              console.log("err")
+              this.snackbar = true
+            }else{
+              this.snackbar = true
+              this.text = '登录成功'
+              localStorage.setItem('token',res.data.access_token)
+              this.$router.push('dashboard')
+            }
             this.$router.push('dashboard')
+          }).catch(err=>{
+            console.log(err)
+          })
         }
     }
   }

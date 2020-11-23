@@ -2,6 +2,9 @@
 import VueRouter from 'vue-router'
 import Login from './components/login.vue'
 import Dashboard from './components/dashboard.vue'
+import TestCase from './components/TestCase.vue'
+
+import Task from './components/Task.vue'
 //1、定义路由组件
 //可以从其他文件 import 进来
 
@@ -11,9 +14,17 @@ import Dashboard from './components/dashboard.vue'
 //每个路由应该映射一个组件，其中‘component’可以是通过Vue.extend()创建的组件构造器
 //或者，只是一个组件配置对象
 const routes=[
+    { path:'/',component:Login},
     { path:'/login',component:Login},
-    { path:'/dashboard',component:Dashboard}
+    { path:'/dashboard',component:Dashboard,children:
+    [   { path:'testcase',component:TestCase},
+        { path:'task',component:Task},  
+    
+    ]
+    },
+   
 ]
+
 
 //3‘创建router实例，然后传’routes'配置
 //可以传其他的配置参数
